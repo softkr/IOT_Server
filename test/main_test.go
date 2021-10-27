@@ -1,8 +1,9 @@
-package main
+package test
 
 import (
 	"fmt"
 	"iot/azure"
+	"iot/socket"
 	"regexp"
 	"strings"
 	"testing"
@@ -18,4 +19,8 @@ func TestDate(t *testing.T) {
 	date = re.ReplaceAllString(strings.Split(date, "_")[0], "20$1-$2-$3")
 	fmt.Println(date, "++++")
 
+}
+
+func TestSocket(t *testing.T) {
+	socket.Run()
 }

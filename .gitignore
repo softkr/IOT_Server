@@ -21,3 +21,4 @@ files/*
 .vscode
 /log/error
 /log/Trace
+/test

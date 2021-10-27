@@ -2,14 +2,17 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/softkr/grpcx/client"
 	"iot/azure"
+	"iot/grpc/client"
 	"iot/log"
+	"iot/socket"
+	_ "iot/socket"
 	"iot/work"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type WatchFile struct {
@@ -32,6 +35,10 @@ func subFileRemove(subFiles []string) {
 			log.Error.Println(err)
 		}
 	}
+}
+
+func init() {
+	go socket.Run()
 }
 
 func main() {
@@ -63,13 +70,13 @@ func main() {
 		subFiles := strings.Split(data.SubFile, " ")
 
 		if work.FileNameCheck(len(subFiles), file.Filename) == false {
-			//파일 존재여부
+			// 파일 존재여부
 			c.JSON(http.StatusOK, gin.H{"status": 204, "messages": fmt.Sprintf("%v not found", file.Filename)})
 		} else if work.SaveFile(file, c) == false {
-			//파일저장
+			// 파일저장
 			c.JSON(http.StatusOK, gin.H{"status": 502, "messages": "Save Failed"})
 		} else if work.GetMD5(file.Filename) == false {
-			//파일 md5 검증
+			// 파일 md5 검증
 			c.JSON(http.StatusOK, gin.H{"status": 203, "messages": "invalid file"})
 		} else {
 			if client.SubFileCount(data.VideoMd5) == 0 {
@@ -84,7 +91,6 @@ func main() {
 			}
 			c.JSON(http.StatusCreated, gin.H{"status": 201, "messages": "정상처리 되었습니다."})
 		}
-
 	})
 	router.Run(":8090")
 }

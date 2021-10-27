@@ -3,14 +3,15 @@ package work
 import (
 	"crypto/md5"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/softkr/grpcx/client"
 	"io"
 	"io/ioutil"
+	"iot/grpcx/client"
 	"iot/log"
 	"mime/multipart"
 	"os"
 	"path/filepath"
+
+	"github.com/gin-gonic/gin"
 )
 
 func FileNameCheck(length int, subFileName string) bool {
@@ -22,7 +23,6 @@ func FileNameCheck(length int, subFileName string) bool {
 		}
 		return true
 	} else {
-
 		return false
 	}
 }
@@ -35,7 +35,6 @@ func SaveFile(file *multipart.FileHeader, c *gin.Context) bool {
 	} else {
 		return true
 	}
-
 }
 
 // GetMD5 md5 파일 검증
@@ -55,7 +54,7 @@ func GetMD5(fileName string) bool {
 	if _, err := io.Copy(h, f); err != nil {
 		log.Error.Println(err)
 	}
-	//fmt.sPrintf("%x", h.Sum(nil))
+	// fmt.sPrintf("%x", h.Sum(nil))
 	md5 := fmt.Sprintf("%x", h.Sum(nil))
 	if md5 == fileName {
 		return true
@@ -72,7 +71,7 @@ func FileExist(file string) bool {
 	return !os.IsNotExist(err)
 }
 
-//Verification
+// Verification
 func Verification(VideoMd5 string, fileName string) bool {
 	url := filepath.Join("files", fileName)
 	f, err := os.Open(url)
@@ -89,7 +88,7 @@ func Verification(VideoMd5 string, fileName string) bool {
 	if _, err := io.Copy(h, f); err != nil {
 		log.Error.Println(err)
 	}
-	//fmt.sPrintf("%x", h.Sum(nil))
+	// fmt.sPrintf("%x", h.Sum(nil))
 	md5 := fmt.Sprintf("%x", h.Sum(nil))
 	if md5 == VideoMd5 {
 		return true
@@ -98,7 +97,7 @@ func Verification(VideoMd5 string, fileName string) bool {
 	}
 }
 
-//통합
+// 통합
 func Integrated(subFiles []string, fileFullName string, VideoMd5 string, c *gin.Context) bool {
 	for _, subFileName := range subFiles {
 		fii, err := os.OpenFile("./files/"+fileFullName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, os.ModePerm)

@@ -23,7 +23,7 @@
 - github.com/Azure/azure-storage-blob-go
 - github.com/gin-gonic/gin
 - github.com/joho/godotenv
-- github.com/softkr/grpcx
+- iot/grpcx
 
   1. github.com/joho/godotenv
   2. go.mongodb.org/mongo-driver
